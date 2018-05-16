@@ -1,0 +1,61 @@
+{% extends "easy_pdf/base.html" %}
+{%block content%}
+<title>Hoja_Evolucion_{{expedientemedico.rfc}}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="icon" type="image/ico" href="/static/images/logo.jpg"/>
+<div id='headerContent'>
+  <label style="font-size:18px; color:gray;">
+    Nombre del paciente: {{expedientemedico.nombre}} {{expedientemedico.ap_paterno}} {{expedientemedico.ap_materno}}
+  </label>
+</div>
+<style>
+ @page {
+     size: letter;
+     margin: 2cm;
+     @frame footer {
+         -pdf-frame-content: footerContent;
+         bottom: 0cm;
+         margin-left: 19cm;
+         margin-right: 0cm;
+         height: 1cm;
+    }
+@frame header {
+  -pdf-frame-content: headerContent;
+  width: 8in;
+  top: 1cm;
+  margin-left: 1cm;
+  margin-right: 1cm;
+  height: 3cm;
+}
+}
+#evolucion{
+ border: 1px solid gray;
+}
+</style>
+<div style="font-size=14.5px;">
+<table id="row" width="100%" cellpadding="3">
+  <tr>
+    <td id="row"><div style="text-align: right"><img src="" width="230px"/></div></td>
+    <td id="row" align="right"><img src="/media/logo.jpg" width="280px" /></td>
+  </tr>
+</table>
+<table width="100%" cellpadding="3" id="evolucion">
+    <tr>
+      <td><b>Fecha:</b></td>
+      <td colspan="4"><b>Evolución</b></td>
+    </tr>
+    {% for a in hojaevolucion %}
+    <tr>
+      <td>{{ forloop.counter }}.- {{a.fecha}}</td>
+      <td colspan="4">{{a.evolucion}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+
+</div>
+<h2><div id="footerContent">
+    {%block page_foot%}
+        <label style="font-size:15px; color:gray;">Pág. <pdf:pagenumber /></label>
+    {%endblock%}
+</div></h2>
+{%endblock%}

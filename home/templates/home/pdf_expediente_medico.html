@@ -1,0 +1,700 @@
+{% extends "easy_pdf/base.html" %}
+{%block content%}
+<title>Expediente_medico_{{expedientemedico.rfc}}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="icon" type="image/ico" href="/static/images/logo.jpg"/>
+<div id='headerContent'>
+  <label style="font-size:15px; color:gray;">
+    Nombre del paciente: {{expedientemedico.nombre}} {{expedientemedico.ap_paterno}} {{expedientemedico.ap_materno}}
+  </label>
+</div>
+<style>
+ @page {
+     size: letter;
+     margin: 2cm;
+     @frame footer {
+         -pdf-frame-content: footerContent;
+         bottom: 0cm;
+         margin-left: 19cm;
+         margin-right: 0cm;
+         height: 1cm;
+    }
+@frame header {
+  -pdf-frame-content: headerContent;
+  width: 8in;
+  top: 1cm;
+  margin-left: 1cm;
+  margin-right: 1cm;
+  height: 3cm;
+}
+}
+a {
+border-bottom: 1px solid black;
+padding-bottom: 5px;
+color:black;
+}
+</style>
+<div style="font-size=14.5px;">
+<!--Tabla para poner la imagen a la derecha-->
+<table id="row" width="100%" cellpadding="3" border="0">
+  <tr>
+    <td id="row"><div style="text-align: right"><img src="" width="230px"/></div></td>
+    <td id="row" align="right"><img src="/media/logo.jpg" width="280px" /></td>
+  </tr>
+</table>
+<!-- Tabla que contiene la informacion del paciente -->
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="2"><b style="font-size=17px;">Historia Clínica<br></b></td>
+  </tr>
+  <tr>
+    <td><b>Fecha:</b>&nbsp;<a>{{expedientemedico.fecha}}</a></td>
+    <td><b>RFC:</b>&nbsp;<a>{{expedientemedico.rfc}}</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Ficha de Identificación</b></td>
+  </tr>
+  <tr>
+    <td><b>Nombre:</b>&nbsp;<a>{{expedientemedico.nombre}} {{expedientemedico.ap_paterno}} {{expedientemedico.ap_materno}}</a></td>
+    <td><b>Edad:</b>&nbsp;<a>{{expedientemedico.edad_paciente}}</a></td>
+  </tr>
+  <tr>
+    <td><b>Fecha de Nacimiento:</b>&nbsp;<a>{{expedientemedico.fecha_de_nacimiento}}</a></td>
+    <td><b>Sexo:</b><img src="/media/check.png" width="18px"/>&nbsp;{{expedientemedico.sexo}}</td>
+  </tr>
+  <tr>
+    <td><b>Estado Civil:</b><img src="/media/check.png" width="18px"/>&nbsp;{{expedientemedico.estado_civil}}</td>
+    <td><b># de Hijos:</b>&nbsp;<a>{{expedientemedico.num_hijos}}</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Médico que Refiere:</b>&nbsp;<a>{{expedientemedico.medico_que_refiere}}</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Motivo de Consulta:</b>&nbsp;<a>{{expedientemedico.motivo_de_consulta}}</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Aseguranza:</b>&nbsp;<a>{{expedientemedico.aseguranza}}</a></td>
+  </tr>
+</table>
+<br>
+
+
+{% if expedientemedico.antecedentes_personales %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Antecedentes Personales</b><br><label style="font-size:11.8px;">(Favor de marcar las enfermedades que padezca.)</label></td>
+  </tr>
+  <tr>
+    <td>
+    {% for e in expedientemedico.antecedentes_personales|slice:"0:7" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_personales|slice:"7:14" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_personales|slice:"14:21" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_personales|slice:"21:28" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    </td>
+  </tr>
+
+  {% if "Cáncer" in expedientemedico.antecedentes_personales %}
+  <table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Tipo de Cáncer y Tratamiento:</b></td>
+  </tr>
+  {% for a in antecedentespersonalescancer %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.tipo}}</a></td>
+    <td ><a>{{a.tratamiento}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+  {% endif %}
+
+  {% if "Otra" in expedientemedico.antecedentes_personales %}
+  <table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Otros Antecedentes Personales:</b></td>
+  </tr>
+  {% for a in antecedentespersonalesotros %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.otro_antecedentes_personales}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+  {% endif %}
+</table>
+<br>
+{% endif %}
+
+
+
+{% if antecedentesquirurgico %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Antecedentes Quirúrgicos</b><br><label style="font-size:11.8px;">(Tipo de Cirugía y Año.)</label></td>
+  </tr>
+  {% for a in antecedentesquirurgico %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.tipo_de_cirugia}}</a></td>
+    <td ><a>{{a.year}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+<br>
+{% endif %}
+
+{% if medicamentosprescritos %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Medicamentos Prescritos</b><br><label style="font-size:11.8px;">(Medicamento y Dosis.)</label></td>
+  </tr>
+  {% for a in medicamentosprescritos %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.medicamento}}</a></td>
+    <td ><a>{{a.dosis}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+<br>
+{% endif %}
+
+
+{% if complementos %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Complementos o Suplementos</b><br><label style="font-size:11.8px;">(Medicamento y Dosis.)</label></td>
+  </tr>
+  {% for a in complementos %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.medicamento}}</a></td>
+    <td ><a>{{a.dosis}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+<br>
+{% endif %}
+
+
+
+{% if expedientemedico.alergias_medicamentos %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="10"><b>Alergias a Medicamentos / Tipo de Reacción</b></td>
+  </tr>
+  <tr>
+    {% for e in expedientemedico.alergias_medicamentos %}
+        <td colspan="5"><img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}</td>
+    {% endfor %}
+  </tr>
+
+{% if "Látex" in expedientemedico.alergias_medicamentos %}
+  <table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Látex-Tipo de Reacción:</b></td>
+  </tr>
+  {% for a in alergiasmedicamentoslatex %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.reaccion}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %} <!-- Cierra condicion Otra -->
+
+{% if "Tela adhesiva" in expedientemedico.alergias_medicamentos %}
+  <table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Tela Adhesiva-Tipo de Reacción:</b></td>
+  </tr>
+  {% for a in alergiasmedicamentostela %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.reaccion}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %} <!-- Cierra condicion Otra -->
+
+{% if "Otra" in expedientemedico.alergias_medicamentos %}
+  <table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Otras Alergias-Tipo de Reacción:</b></td>
+  </tr>
+  {% for a in alergiasmedicamentos %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.alergia}}</a></td>
+    <td colspan="2"><a>{{a.reaccion}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %} <!-- Cierra condicion Otra -->
+</table>
+<br>
+{% endif %} <!-- Cierra condicion para mostrar seccion -->
+
+
+{% if expedientemedico.tabaquismo or expedientemedico.alcoholismo or  expedientemedico.drogadiccion or expedientemedico.ejercicio or expedientemedico.cafeina or expedientemedico.creencia_religiosa %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="5"><b>Prácticas Sociales</b><br><label style="font-size:11.8px;">(Favor de marcar lo apropiado de las listas.)</label></td>
+  </tr>
+  <tr>
+  {% if expedientemedico.tabaquismo %}<td><a>Tabaquismo</a></td>{% endif %} 
+  {% if expedientemedico.alcoholismo %}<td><a>Alcoholismo</a></td>{% endif %} 
+  {% if expedientemedico.drogadiccion %}<td><a>Drogadicción</a></td>{% endif %} 
+  {% if expedientemedico.ejercicio %}<td><a>Ejercicio</a></td>{% endif %} 
+  {% if expedientemedico.cafeina %}<td><a>Cafeína</a></td>{% endif %} 
+  </tr>
+  <tr>
+    {% if expedientemedico.tabaquismo %}
+    <td>
+    {% for e in expedientemedico.tabaquismo|slice:"0:2" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    {% for e in expedientemedico.tabaquismo|slice:"2:3" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+    {% endfor %}
+    {% if expedientemedico.dias_tabaquismo %}
+    <a>{{expedientemedico.dias_tabaquismo}} días</a>{% endif %}
+    {% for e in expedientemedico.tabaquismo|slice:"3:5" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    {% if expedientemedico.year_tabaquismo %}
+    <br># años?&nbsp;<a>{{expedientemedico.year_tabaquismo}}</a>
+    {% endif %}
+    </td>
+    {% endif %}
+
+    {% if expedientemedico.alcoholismo %}
+    <td>
+    {% for e in expedientemedico.alcoholismo %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %} 
+    {% if expedientemedico.year_alcoholismo %}
+    # años?&nbsp;<a>{{expedientemedico.year_tabaquismo}}</a>
+    {% endif %} 
+    </td>
+    {% endif %} 
+
+    {% if expedientemedico.drogadiccion %}
+    <td>
+    {% for e in expedientemedico.drogadiccion|slice:"0:3" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    {% for e in expedientemedico.drogadiccion|slice:"3:4" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+    {% endfor %}
+    {% if expedientemedico.otras_drogadiccion %}
+    Especificar: <a>{{expedientemedico.otras_drogadiccion}}</a>{% endif %}
+    {% if expedientemedico.year_drogadiccion %}
+    <br># años?&nbsp;<a>{{expedientemedico.year_drogadiccion}}</a>
+    {% endif %}
+    </td>
+    {% endif %}
+
+    {% if expedientemedico.ejercicio %}
+    <td>
+    {% for e in expedientemedico.ejercicio %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %} 
+    {% if expedientemedico.year_ejercicio %}
+    # años?&nbsp;<a>{{expedientemedico.year_ejercicio}}</a>
+    {% endif %}   
+    </td>
+    {% endif %}   
+
+    {% if expedientemedico.cafeina %}
+    <td>
+    {% for e in expedientemedico.cafeina %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %} 
+    {% if expedientemedico.year_cafeina %}
+    # años?&nbsp;<a>{{expedientemedico.year_cafeina}}</a>
+    {% endif %}   
+    </td>
+    {% endif %}
+  </tr>
+
+{% if "Otras" in expedientemedico.drogadiccion %}
+  <table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b>Otros Tipos de Drogadicción:</b></td>
+  </tr>
+  {% for a in drogadiccionotras %}
+  <tr>
+    <td colspan="2">{{ forloop.counter }}. <a>{{a.otra}}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %} <!-- Cierra condicion Otra -->
+
+  {% if expedientemedico.creencia_religiosa %}
+  <tr>
+      <td colspan="5"><b>Alguna creencia religiosa que pudiera cambiar/afectar su tratamiento médico?</b>&nbsp;{{expedientemedico.creencia_religiosa}}</td>
+  </tr>
+  {% endif %}
+</table>
+<br><br>
+{% endif %} <!-- cierra IF para mostrar seccion -->
+
+
+
+{% if expedientemedico.nivel_escolaridad %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="5"><b>Escolaridad</b></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Nivel de estudio:</b>&nbsp;{{expedientemedico.nivel_escolaridad}}</td>
+    <td>
+    {% for e in expedientemedico.tiempo_escolaridad %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %} 
+    </td> 
+    {% if "Trunca" in expedientemedico.tiempo_escolaridad %}
+    <td colspan="2"><b>¿Hasta dónde?</b>&nbsp;{{expedientemedico.alcance_escolaridad}}</td>
+    {% endif %} <!-- Cierra condicion Otra -->
+  </tr>
+</table>
+<br>
+{% endif %} <!-- cierra IF para mostrar seccion -->
+
+
+
+
+
+{% if expedientemedico.edad_padre or expedientemedico.antecedentes_padre %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="3"><b>Antecedentes Heredo - Familiares</b></td>
+  </tr>
+  <tr>
+    <td colspan="3">( Padre )</td>
+  </tr>
+  <tr>
+    <td colspan="3">Edad:&nbsp;<a>{{expedientemedico.edad_padre}}</a></td>
+  </tr>
+  <tr>
+    <td>
+    {% for e in expedientemedico.antecedentes_padre|slice:"0:2" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_padre|slice:"2:5" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_padre|slice:"5:6" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    {% for e in expedientemedico.antecedentes_padre|slice:"6:7" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+  </tr>
+</table>
+
+{% if "Cáncer" in expedientemedico.antecedentes_padre %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Tipos de Cáncer:</b></td>
+    </tr>
+    {% for a in padrecancer %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.tipo}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+
+
+  {% if "Otro" in expedientemedico.antecedentes_padre %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Otros Padecimientos:</b></td>
+    </tr>
+    {% for a in padreotros %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.otro}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+
+  {% if "Finado" in expedientemedico.antecedentes_padre %}
+    <td colspan="2"><b>Causa de muerte:</b>&nbsp;{{expedientemedico.causa_muerte_padre}}</td>
+    {% endif %} <!-- Cierra condicion Otra -->
+    <br>
+{% endif %} <!-- Cierra if seccion padre -->
+
+
+
+{% if expedientemedico.edad_madre or expedientemedico.antecedentes_madre %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="3">( Madre )</td>
+  </tr>
+  <tr>
+    <td colspan="3">Edad:&nbsp;<a>{{expedientemedico.edad_madre}}</a></td>
+  </tr>
+  <tr>
+    <td>
+    {% for e in expedientemedico.antecedentes_madre|slice:"0:2" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_madre|slice:"2:5" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td>
+    {% for e in expedientemedico.antecedentes_madre|slice:"5:6" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    {% for e in expedientemedico.antecedentes_madre|slice:"6:7" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+  </tr>
+</table>
+
+{% if "Cáncer" in expedientemedico.antecedentes_madre %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Tipos de Cáncer:</b></td>
+    </tr>
+    {% for a in madrecancer %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.tipo}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+
+
+  {% if "Otro" in expedientemedico.antecedentes_madre %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Otros Padecimientos:</b></td>
+    </tr>
+    {% for a in madreotros %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.otro}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+
+  {% if "Finado" in expedientemedico.antecedentes_madre %}
+    <td colspan="2"><b>Causa de muerte:</b>&nbsp;{{expedientemedico.causa_muerte_madre}}</td>
+    {% endif %} <!-- Cierra condicion Otra -->
+    <br>
+{% endif %} <!-- Cierra if seccion madre -->
+
+
+
+
+{% if expedientemedico.edad_hermanos or expedientemedico.antecedentes_hermanos %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="3">( Hermanos )</td>
+  </tr>
+  <tr>
+    <td>
+      Edades:&nbsp;<a>{{expedientemedico.edad_hermanos}}</a><br>
+      # Vivos:&nbsp;<a>{{expedientemedico.num_hermanos_vivos}}</a><br>
+      {% if expedientemedico.num_hermanos_finados %}# Finado:&nbsp;<a>{{expedientemedico.num_hermanos_finados}}</a>{% endif %}
+    </td>
+
+    <td>
+      {% for e in expedientemedico.antecedentes_hermanos|slice:"0:3" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td>
+      {% for e in expedientemedico.antecedentes_hermanos|slice:"3:5" %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+  </tr>
+</table>
+{% if "Cáncer" in expedientemedico.antecedentes_hermanos %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Tipos de Cáncer:</b></td>
+    </tr>
+    {% for a in hermanoscancer %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.tipo}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+  {% if "Otro" in expedientemedico.antecedentes_hermanos %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Otros Padecimientos:</b></td>
+    </tr>
+    {% for a in hermanosotros %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.otro}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+  {% if expedientemedico.num_hermanos_finados %}
+    <table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Causa de muerte:</b></td>
+    </tr>
+    {% for a in hermanoscausamuerte %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.causamuerte}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  {% endif %} <!-- Cierra condicion Otra -->
+  <br>
+{% endif %}<!-- seccion hermanos -->
+
+{% if expedientemedico.practica_deporte %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="5"><b>Práctica actualmente usted algún Deporte Organizado?</b>
+    {% for e in expedientemedico.practica_deporte %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}<br>
+    {% endfor %}
+    {% if "Si" in expedientemedico.practica_deporte %}
+        ¿Qué Deporte?:&nbsp;<a>{{expedientemedico.que_deporte}}</a>
+        <br>
+    {% endif %}
+    </td>
+  </tr>
+</table>
+<br>
+{% endif %}
+
+{% if expedientemedico.lado_dominante or expedientemedico.nivel %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="3"><b>Lado Dominante:</b>
+    {% for e in expedientemedico.lado_dominante %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td colspan="3"><b>Nivel:</b>
+    {% for e in expedientemedico.nivel %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+  </tr>
+</table>
+<br>
+{% endif %}
+
+
+{% if "Femenino" in expedientemedico.sexo %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="6"><b>Para Mujeres:</b></td>
+  </tr>
+  <tr>
+    <td colspan="3"><b>Está usted embarazada?</b>
+    {% for e in expedientemedico.esta_embarazada %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+    <td colspan="3"><b>Está usted amamantando?</b>
+    {% for e in expedientemedico.esta_amamantando %}
+        <img src="/media/check.png" width="18px"/>&nbsp;&nbsp;{{e}}
+        <br>
+    {% endfor %}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><b># de Embarazos/Partos:&nbsp;</b><a>{{expedientemedico.num_embarazos}}</a></td>
+    <td colspan="2"><b>Tipo de Anticonceptivos:&nbsp;</b><a>{{expedientemedico.tipos_de_anticonceptivos}}</a></td>
+    <td colspan="2"><b>Fecha de Ultima Regla:&nbsp;</b><a>{{expedientemedico.fecha_de_ultima_regla}}</a></td>
+  </tr>
+</table>
+<br>
+{% endif %}
+
+
+{% if expedientemedico.fecha_gripe or expedientemedico.fecha_tetanos or inmunizacionesotras%}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="6"><b>Inmunizaciones:</b></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Gripe&nbsp;&nbsp;Fecha:&nbsp;&nbsp;</b><a>{{expedientemedico.fecha_gripe}}</a></td>
+    <td colspan="2"><b>Tétanos&nbsp;&nbsp;Fecha:&nbsp;&nbsp;</b><a>{{expedientemedico.fecha_tetanos}}</a></td>
+    <td colspan="2">{% for e in expedientemedico.otra_inmunizacion %}
+        <img src="/media/check.png" width="18px"/>&nbsp;{{e}}
+        {% endfor %}
+    </td>
+  </tr>
+</table>
+{% if expedientemedico.otra_inmunizacion %}
+<table width="100%" cellpadding="3" border="0">
+    <tr>
+      <td colspan="4"><b>Otras Inmunizaciones:</b></td>
+    </tr>
+    {% for a in inmunizacionesotras %}
+    <tr>
+      <td colspan="2">{{ forloop.counter }}. <a>{{a.otra}}</a></td>
+      <td><a>{{a.fecha}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endif %}
+<br>
+{% endif %}
+{% if expedientemedico.idx %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="2"><b>IDX:</b>&nbsp;<a>{{expedientemedico.idx}}</a></td>
+  </tr>
+</table>
+{% endif %}
+{% if expedientemedico.padecimiento_actual %}
+<table width="100%" cellpadding="3" border="0">
+  <tr>
+    <td colspan="4"><b> Padecimiento Actual</b></td>
+  </tr>
+  <tr>
+    <td colspan="4">{{expedientemedico.padecimiento_actual}}</td>
+  </tr>
+{% endif %}
+</div>
+<h2><div id="footerContent">
+    {%block page_foot%}
+        <label style="font-size:15px; color:gray;">Pág. <pdf:pagenumber /></label>
+    {%endblock%}
+</div></h2>
+{%endblock%}

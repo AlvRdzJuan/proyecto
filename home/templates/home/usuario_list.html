@@ -1,0 +1,66 @@
+{%extends 'base.html'%}
+{% load static staticfiles auth_extras %}
+{%block style%}
+<link href="/static/bootstrap/css/tabla_busqueda.css" rel="stylesheet" type="text/css" media="all">
+<!-- Icons -->
+<script src="https://use.fontawesome.com/3d312f9868.js"></script>
+<!-- Para que funcione la busqueda-->
+<script src="/static/bootstrap/js/jquery.min.js"></script>
+<style media="screen">
+.margin-left{
+    margin-left: 50px;
+}
+</style>
+{%endblock%} <!-- -->
+{%block content%}
+<br><br><br>
+<h1 class="text-center">Lista de Usuarios</h1>
+<a class="btn btn-primary margin-left" href='{% url "Agregar_Usuario_Physiomed"%}'>Crear Usuario</a>
+
+{% if object_list %}
+<div class="centrarcontenido">
+  <div id="no-more-tables">
+    <table  id="table">
+      <thead class="cf">
+        <tr>
+          <th>Nombre Usuario</th>
+          <th>Tipo</th>
+          <th>Editar</th>
+          <th>Eliminar</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      {% for usuario in object_list %}
+        <tbody>
+          <tr>
+              <td data-title="Nombre Usuario">{{usuario.name}}</td>
+              <td data-title="Tipo">{{usuario.tipo_de_usuario}}</td>
+
+              <td data-title="Editar">
+              {% if user.is_superuser %}
+              <a class="btn btn-success btn-sm btn_ver"  href=' {% url "usuario_update" usuario.name.id%}' role="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Editar&nbsp;
+              {% else %}
+                  --------------
+              {% endif %}
+              </td>
+              <td data-title="Eliminar">
+                  {% if user.username == usuario.name or user.is_superuser %}
+                  <a class="btn btn-danger btn-sm btn_ver"  href='{% url "usuario_delete"  usuario.name.id%}' role="button"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;Eliminar&nbsp;
+                  {% else %}
+                  --------------
+                  {% endif %}
+               </td>
+          </tr>
+        </tbody>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% else %}
+<center style="font-size:18px;">No hay usuarios registrados .</center>
+{% endif %}
+<br><br><br>
+
+
+ {%endblock%}}

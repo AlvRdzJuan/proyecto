@@ -1,0 +1,106 @@
+{%extends 'base.html'%}
+{% load static staticfiles auth_extras %}
+  {%block style%}
+   <link href="/static/bootstrap/css/registrar_expediente.css" rel="stylesheet" type="text/css" media="all">
+   <style type="text/css">
+       button {
+        margin-left: 40%;
+        margin-right: 50%;
+       }
+        h1 {
+        margin-left: 40%;
+
+       }
+       .esconder{
+  display: none;
+}
+   </style>
+  {%endblock%}
+
+{%block content%}
+<br><br><br>
+<form method="POST" >{%csrf_token%}
+<div class="container bg_registrar mx-auto " style="width: 70%;">
+    <body >
+        <h1> Modificar Usuario </h1>
+        <div class="row">
+            <div class="text-right col-sm-4 col-xs-12">Usuario</div>
+            <div class="col-sm-6 col-xs-12">
+
+                    {{ form.username.errors }}
+                    {{ form.username }}
+                    <p>Solo letras, digitos y @/./+/-/_. </p>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-right col-sm-4 col-xs-12">Contraseña  </div>
+            <div class="col-sm-6 col-xs-12">
+                {{ form.password1.errors }}
+                {{ form.password1 }}
+
+
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="text-right col-sm-4 col-xs-12">Confirmar Contraseña </div>
+            <div class="col-sm-6 col-xs-12">
+
+                    {{ form.password2.errors }}
+                    {{ form.password2 }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="text-right col-sm-4 col-xs-12">Tipo de usuario</div>
+            <div class="col-sm-6 col-xs-12">
+
+                    {{ form.tipo_de_usuario.errors }}
+                    {{ form.tipo_de_usuario }}
+                    {{ form.tipo_de_usuario.help_text }}
+
+            </div>
+        </div>
+        <br>
+    <button type="submit" class="btn btn-primary btn-md">Modificar Usuario</button>
+    <br><br>
+    <button type="reset" class="btn btn-md ">Cancel</button>
+
+
+    </body>
+
+
+</div>
+
+</form>
+
+<script>
+        setTimeout(function() {
+            $('.m').fadeOut('slow');
+        }, 3000); // 1000 =  1 sec
+</script>
+
+<script type="text/javascript">
+    function FuncionActivar() {
+    	document.getElementById("id_tipo_de_usuario").disabled = false;
+
+}
+</script>
+<script type="text/javascript">
+    function FuncionDesactivar(a) {
+    var y = document.getElementById("id_tipo_de_usuario").options;
+    var x= document.getElementById("id_tipo_de_usuario");
+    var paso;
+	for (paso = 0; paso < y.length; paso++)
+	{
+	  // Se ejecuta 5 veces, con valores desde paso desde 0 hasta 4.
+	  if (y[paso].text==a)
+	  {
+		x.selectedIndex = paso;
+	  }
+	}
+	document.getElementById("id_tipo_de_usuario").disabled = true;
+}
+</script>
+ {%endblock%}

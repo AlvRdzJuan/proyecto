@@ -1,0 +1,1202 @@
+{%extends 'base.html'%}   
+{% load static staticfiles auth_extras %}   
+  {%block style%} 
+  <link href="/static/bootstrap/css/registrar_expediente.css" rel="stylesheet" type="text/css" media="all">
+  <title>Registrar Expediente Médico - Physiomed</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/js_autocomplete/jquery-ui.css">
+  {%endblock%} 
+  
+{%block content%}
+<!-- IF PERMISSIONS -->
+{% if request.user|has_group:"medico" or request.user|has_group:"terapeuta" %}
+<body onload="FuncionDesactivar()">
+<br><br><br>
+    <div class="col-md-12">
+        <form action="" method="POST" enctype="multipart/form-data" onsubmit="FuncionActivar()">{% csrf_token %}
+            <!--  Modelo sin FK / a los campos individuales accedo con {{ form.NOMBRE_DEL_CAMPO }}-->
+            <!--{{ form.as_p }}-->
+            <table class="table table responsive "  >
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" >
+              <li class="nav-item">
+                <a class="nav-link active" id="Ficha_de_Identificacion-tab" data-toggle="pill" href="#Ficha_de_Identificacion" role="tab" aria-controls="pills-home" aria-expanded="true">Ficha de Identificacion</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" id="Antecedentes_Personales-tab" data-toggle="pill" href="#Antecedentes_Personales" role="tab" aria-controls="Antecedentes_Personales" aria-expanded="true">Antecedentes Personales</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Antecedentes_Quirurgicos-tab" data-toggle="pill" href="#Antecedentes_Quirurgicos" role="tab" aria-controls="Antecedentes_Quirurgicos" aria-expanded="true">Antecedentes Quirurgicos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Medicamentos_Prescritos-tab" data-toggle="pill" href="#Medicamentos_Prescritos" role="tab" aria-controls="Medicamentos_Prescritos" aria-expanded="true">Medicamentos Prescritos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Complementos_o_suplementos-tab" data-toggle="pill" href="#Complementos_o_suplementos" role="tab" aria-controls="Complementos_o_suplementos" aria-expanded="true">Complementos o suplementos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Alergias_a_Medicamentos-tab" data-toggle="pill" href="#Alergias_a_Medicamentos" role="tab" aria-controls="Alergias_a_Medicamentos" aria-expanded="true">Alergias a Medicamentos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Practicas_Sociales-tab" data-toggle="pill" href="#Practicas_Sociales" role="tab" aria-controls="Practicas_Sociales" aria-expanded="true">Prácticas Sociales</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Escolaridad-tab" data-toggle="pill" href="#Escolaridad" role="tab" aria-controls="Escolaridad" aria-expanded="true">Escolaridad</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Antecedentes_Familiares-tab" data-toggle="pill" href="#Antecedentes_Familiares" role="tab" aria-controls="Antecedentes_Familiares" aria-expanded="true">Antecedentes Heredo-Familiares</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link False" id="Mujeres-tab" data-toggle="pill" href="#Mujeres" role="tab" aria-controls="Mujeres" aria-expanded="true">Para Mujeres</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Inmunizaciones-tab" data-toggle="pill" href="#Inmunizaciones" role="tab" aria-controls="Inmunizaciones" aria-expanded="true">Inmunizaciones</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="Padecimiento_Actual-tab" data-toggle="pill" href="#Padecimiento_Actual" role="tab" aria-controls="Padecimiento_Actual" aria-expanded="true">Padecimiento Actual</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" id="Laboratorio_Gabinete-tab" data-toggle="pill" href="#Laboratorio_Gabinete" role="tab" aria-controls="Laboratorio_Gabinete" aria-expanded="true">Laboratorio y Gabinete</a>
+              </li>
+            </ul>
+                
+            </table>
+            <br>
+
+            <div class="container bg_registrar" >
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="Ficha_de_Identificacion">
+                    
+                    <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-6">Fecha:</div>
+                        <div class="col-md-3 col-sm-6 col-xs-12"><p>{{form.fecha}}</p></div>
+                        <div class="col-md-1 col-sm-3 col-xs-6">RFC:</div>
+                        <div class="col-md-6 col-sm-6 col-xs-12"><p>{{form.rfc}}<label style="font-size:12.7px;"><span style="color:red;">*</span>Se genera automáticamente.</label></p></div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-md-1 col-sm-3 col-xs-6">{{ form.nombre.label }}</div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <p>
+                                {{ form.nombre.errors }}
+                                {{form.nombre}}
+                                {{ form.nombre.help_text }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-1 col-sm-3 col-xs-6">Apellido Paterno:</div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <p>
+                            {{ form.ap_paterno.errors }}
+                            {{form.ap_paterno}}
+                            {{ form.ap_paterno.help_text }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-1 col-sm-3 col-xs-6">Apellido Materno:</div>   
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <p>
+                            {{ form.ap_materno.errors }}
+                            {{form.ap_materno}}
+                            {{ form.ap_materno.help_text }} 
+                            </p>
+                        </div>                  
+                    </div>
+                    <br>
+
+                    <div class="row"> 
+                        <div class="col-md-1 col-sm-3 col-xs-6">Edad:</div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <p> 
+                            {{ form.edad_paciente.errors }}
+                            {{ form.edad_paciente }}
+                            {{ form.edad_paciente.help_text }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-1 col-sm-3 col-xs-6">Fecha Nacimiento:</div>            
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <p>
+                            {{ form.fecha_de_nacimiento.errors }}
+                            {{ form.fecha_de_nacimiento }}<label style="font-size:12.7px;"><span style="color:red;">*</span>La edad se genera automáticamente al llenar este campo.</label>
+                            {{ form.fecha_de_nacimiento.help_text }}
+                            </p>
+                        </div>         
+
+
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 col-xs-12">Sexo: 
+                            <p>
+                            {{form.sexo}}
+                            {{ form.sexo.errors }}
+                            {{ form.sexo.help_text }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-12">Estado Civil:
+                            <p>
+                            {{ form.estado_civil.errors }}
+                            {{form.estado_civil}}
+                            {{ form.estado_civil.help_text }}
+                            </p>
+                        </div> 
+
+                    </div>
+                    <br>
+
+                <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-6"># de Hijos:</div> 
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <p>
+                            {{ form.num_hijos.errors }}
+                            {{ form.num_hijos }}
+                            {{ form.num_hijos.help_text }}
+                            </p>
+                        </div> 
+           
+                        <div class="col-md-1 col-sm-3 col-xs-6">Médico que Refiere:</div>
+                        <div class="col-xs-12 col-sm-6 ">
+                            <p>
+                            {{ form.medico_que_refiere.errors }}
+                            {{ form.medico_que_refiere }}
+                            {{ form.medico_que_refiere.help_text }}
+                            </p>
+                        </div>
+                </div>
+                <br>
+
+                <div class="row">
+                        <div class="col-md-2 col-sm-3 col-xs-6">Motivo de Consulta:</div>
+                        <div class="col-xs-12 col-sm-6 ">
+                            <p>
+                            {{ form.motivo_de_consulta.errors }}
+                            {{ form.motivo_de_consulta }}
+                            {{ form.motivo_de_consulta.help_text }}
+                            </p>
+                        </div>
+                </div>
+
+                <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-6">Aseguranza:</div>
+                        <div class="col-xs-12 col-sm-6 ">
+                            <p>
+                            {{ form.aseguranza.errors }}
+                            {{ form.aseguranza }}
+                            {{ form.aseguranza.help_text }}
+                            </p>
+                        </div>
+                </div>
+
+                
+                </div>
+
+                <input class='form-control' id="usuario" name="usuario" value="{{user}}" type='hidden'>
+
+                <div class="tab-pane fade in active" id="Antecedentes_Personales">
+                    <p style="font-size:16px;"><b>(Favor de marcar las enfermedades que padezca el paciente.)</b></p>
+                    <div class="row">
+                        
+                        <div class="col-xs-12 col-sm-2 ">
+                            {% for e in form.antecedentes_personales|slice:"0:10" %}
+                                {{e}}<br>
+                            {% endfor %}
+
+                        </div>
+                        <div class="col-xs-12 col-sm-2 ">
+                            {% for e in form.antecedentes_personales|slice:"10:20" %}
+                                {{e}}<br>
+                            {% endfor %}
+
+                        </div>
+                        <div class="col-xs-12 col-sm-7 ">
+                            {% for e in form.antecedentes_personales|slice:"20:26" %}
+                                {{e}}<br>
+                            {% endfor %}
+                            {% for e in form.antecedentes_personales|slice:"26:27" %}
+                                {{e}}<br>
+                            {% endfor %}
+                            {% for e in form.antecedentes_personales|slice:"27:28" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div>
+                   
+                    </div>
+
+                    <div class="row" id="antecedentespersonales_cancer">
+                    <table class="table aq" border="0">
+                        {{ antecedentespersonalescancer.management_form }}
+
+                        {% for form in antecedentespersonalescancer.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Cáncer</th>
+                                    <th>Tratamiento</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="{% cycle row1 row2 %} formset_row_tc">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="row" id="antecedentespersonales_otros">
+                    <table class="table aq" border="0">
+                        {{ antecedentespersonalesotros.management_form }}
+
+                        {% for form in antecedentespersonalesotros.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Otro</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_o">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                </div> 
+
+
+                <!-- SI QUITO EL ACTIVE YA NO ME SALE LA OPCION DE ELIMINAR EN HTML -->
+                <div class="tab-pane fade in active" id="Antecedentes_Quirurgicos">
+                    <!-- Modelo con FK -->
+                    <table class="table aq" border="0">
+                        {{ antecedentesquirurgicos.management_form }}
+
+                        {% for form in antecedentesquirurgicos.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Cirugía</th>
+                                    <th>Fecha</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="{% cycle row1 row2 %} formset_row">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                
+                <div class="tab-pane fade in active" id="Medicamentos_Prescritos">
+                    <!-- Modelo con FK -->
+                    <table class="table" border="0">
+                        {{ medicamentosprescritos.management_form }}
+
+                        {% for form in medicamentosprescritos.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Dosis/Número por Día</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="{% cycle row1 row2 %} formset_row_mp">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="tab-pane fade in active" id="Complementos_o_suplementos">
+                    <!-- Modelo con FK -->
+                    <table class="table" border="0">
+                        {{ complementos.management_form }}
+
+                        {% for form in complementos.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Dosis/Número por Día</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="{% cycle row1 row2 %} formset_row_c">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+                <div class="tab-pane fade in active" id="Alergias_a_Medicamentos">
+                    <label style="font-size:18px;"><b>Alergias a Medicamentos /Tipo de Reacción</b></label>
+                    <div class="col-xs-12 col-sm-6 ">
+                        {% for e in form.alergias_medicamentos %}
+                            {{e}}<br>
+                        {% endfor %}
+
+                    </div>
+
+                <div class="row" id="alergias_latex">
+                    <table class="table" border="0">
+                        {{ alergiasmedicamentoslatex.management_form }}
+
+                        {% for form in alergiasmedicamentoslatex.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Reacción</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_reaccion_latex">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div> <!-- finaliza row-->
+
+                <div class="row" id="alergias_tela">
+                    <table class="table" border="0">
+                        {{ alergiasmedicamentostela.management_form }}
+
+                        {% for form in alergiasmedicamentostela.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Reacción</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_reaccion_tela">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div> <!-- finaliza row-->
+
+
+                <div class="row" id="alergias_otros">
+                    <table class="table" border="0">
+                        {{ alergiasmedicamentos.management_form }}
+
+                        {% for form in alergiasmedicamentos.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Alergia</th>
+                                    <th>Tipo de Reacción</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="{% cycle row1 row2 %} formset_row_a">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div> <!-- finaliza row-->
+                </div>
+
+                <div class="tab-pane fade in active" id="Practicas_Sociales">
+                    <p style="font-size:16px;"><b>(Favor de marcar lo apropiado de las listas.)</b></p>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-2 ">
+                            <br><p><a id="sociales">Tabaquismo</a></p>
+                            {% for e in form.tabaquismo|slice:"0:2" %}
+                                {{e}}<br>
+                            {% endfor %}
+                            {% for e in form.tabaquismo|slice:"2:3" %}
+                                {{e}}&nbsp;{{form.dias_tabaquismo}}<br>
+                            {% endfor %}
+                            {% for e in form.tabaquismo|slice:"3:5" %}
+                                {{e}}<br>
+                            {% endfor %}
+                            # años?&nbsp;{{form.year_tabaquismo}}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-2 ">
+                            <br><p><a id="sociales">Alcoholismo</a></p>
+                            {% for e in form.alcoholismo %}
+                                {{e}}<br>
+                            {% endfor %}
+                            # años?&nbsp;{{form.year_alcoholismo}}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-2">
+                            <br><p><a id="sociales">Drogadicción</a></p>
+                            {% for e in form.drogadiccion|slice:"0:3" %}
+                                {{e}}<br>
+                            {% endfor %}
+                            {% for e in form.drogadiccion|slice:"3:4" %}
+                                {{e}}<br>
+                            {% endfor %}
+                            <br># años?&nbsp;{{form.year_drogadiccion}}
+                        </div><br>
+
+
+
+                        <div class="col-xs-12 col-sm-2">
+                            <br><p><a id="sociales">Ejercicio</a></p>
+                            {% for e in form.ejercicio %}
+                                {{e}}<br>
+                            {% endfor %}
+                            <br># años?&nbsp;{{form.year_ejercicio}}
+                        </div><br>
+
+
+                        <div class="col-xs-12 col-sm-2">
+                            <br><p><a id="sociales">Cafeína</a></p>
+                            {% for e in form.cafeina %}
+                                {{e}}<br>
+                            {% endfor %}
+                            <br># años?&nbsp;{{form.year_cafeina}}
+                        </div><br>
+                    </div> <!-- finaliza row -->
+
+                    <br><br>
+                    <div class="row" id="drogadiccion_otras">
+                    <table class="table" border="0">
+                        {{ drogadiccionotras.management_form }}
+
+                        {% for form in drogadiccionotras.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Otro Tipo de Drogadicción</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_otrasdrogadiccion">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </div><!-- finaliza row-->
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-8">
+                            <br>Alguna creencia religiosa que pudiera cambiar/afectar su tratamiento médico?&nbsp;{{form.creencia_religiosa}}
+                        </div><br>
+                    </div> <!-- finaliza row -->
+                    <br><br>
+                </div> 
+
+                <div class="tab-pane fade in active" id="Escolaridad">
+                    <p style="font-size:16px;"><b>(Seleccione nivel de estudio.)</b></p>
+                    <div class="row">
+                        
+                        <div class="col-xs-12 col-sm-3">
+                            <br><p>Nivel de estudio:
+                            {{ form.nivel_escolaridad }}</p>
+                        </div><br>
+
+
+                        <div class="col-xs-12 col-sm-2">
+                            {% for e in form.tiempo_escolaridad %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br> 
+
+                        <div class="col-xs-12 col-sm-5" id="alcance_escuela">
+                            <br><p>¿Hasta dónde?
+                            {{ form.alcance_escolaridad }}</p>
+                        </div><br>           
+                    </div>
+                    <br><br><br>
+                </div> 
+
+
+                <div class="tab-pane fade in active" id="Antecedentes_Familiares">
+                    <p style="font-size:16px;"><b>(Padre)</b></p>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-2 ">
+                            <p>Edad:&nbsp;{{form.edad_padre}}</p>
+                            {% for e in form.antecedentes_padre|slice:"0:2" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            {% for e in form.antecedentes_padre|slice:"2:5" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-4 ">
+                            {% for e in form.antecedentes_padre|slice:"5:7" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+                    </div> <!-- se termina el primer Row-->
+                    <br>
+
+                    <div class="row" id="padrecancer">
+                        <table class="table" border="0">
+                        {{ padrecancer.management_form }}
+
+                        {% for form in padrecancer.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Cáncer</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_padrecancer">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+
+                    <div class="row" id="padreotros">
+                        <table class="table" border="0">
+                        {{ padreotros.management_form }}
+
+                        {% for form in padreotros.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Otro</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_padreotros">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+
+                    <div class="row" id="padrecausamuerte">
+                        <div class="col-xs-12 col-sm-4 ">
+                            <p>Causa de Muerte:&nbsp;{{form.causa_muerte_padre}}</p>
+                        </div><br>
+                    </div><!-- se termina el primer Row-->
+
+                    <br><br>
+                    <p style="font-size:16px;"><b>(Madre)</b></p>
+                    <div class="row">
+                        
+                        <div class="col-xs-12 col-sm-2 ">
+                            <p>Edad:&nbsp;{{form.edad_madre}}</p>
+                            {% for e in form.antecedentes_madre|slice:"0:2" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            {% for e in form.antecedentes_madre|slice:"2:5" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-4 ">
+                            {% for e in form.antecedentes_madre|slice:"5:7" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+                    </div> <!-- se termina el primer Row-->
+                    <br>
+
+                    <div class="row" id="madrecancer">
+                        <table class="table" border="0">
+                        {{ madrecancer.management_form }}
+
+                        {% for form in madrecancer.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Cáncer</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_madrecancer">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+
+                    <div class="row" id="madreotros">
+                        <table class="table" border="0">
+                        {{ madreotros.management_form }}
+
+                        {% for form in madreotros.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Otro</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_madreotros">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+                    <div class="row" id="madrecausamuerte">
+                        <div class="col-xs-12 col-sm-4 ">
+                            <p>Causa de Muerte:&nbsp;{{form.causa_muerte_madre}}</p>
+                        </div><br>
+                    </div>
+
+
+                    <br><br>
+                    <p style="font-size:16px;"><b>(Hermanos)</b></p>
+                    <div class="row">
+                        
+                        <div class="col-xs-12 col-sm-2 ">
+                            <p>Edades:&nbsp;{{form.edad_hermanos}}</p>
+                            <p># Vivos:&nbsp;{{form.num_hermanos_vivos}}</p>
+                            <p># Finado:&nbsp;{{form.num_hermanos_finados}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            {% for e in form.antecedentes_hermanos|slice:"0:3" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-4 ">
+                            {% for e in form.antecedentes_hermanos|slice:"3:5" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+                    </div> <!-- se termina el  Row-->
+                    <br>
+
+                    <div class="row" id="hermanoscancer">
+                        <table class="table" border="0">
+                        {{ hermanoscancer.management_form }}
+
+                        {% for form in hermanoscancer.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Cáncer</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_hermanoscancer">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+
+                    <div class="row" id="hermanosotros">
+                        <table class="table" border="0">
+                        {{ hermanosotros.management_form }}
+
+                        {% for form in hermanosotros.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Otro</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_hermanosotros">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+                    <br>
+
+                    <div class="row" id="hermanoscausamuerte">
+                        <table class="table" border="0">
+                        {{ hermanoscausamuerte.management_form }}
+
+                        {% for form in hermanoscausamuerte.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Causa de Muerte de Hermanos</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_hermanoscausamuerte">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div><!-- se termina el  Row-->
+
+                    <br><br>
+                     <div class="row">
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p>Práctica actualmente Ud algún Deporte Organizado:&nbsp;{{form.practica_deporte}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3" id="cualdeporte">
+                            <p>¿Qué Deporte?&nbsp;{{form.que_deporte}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p>Lado Dominante:&nbsp;{{form.lado_dominante}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p>Nivel:&nbsp;{{form.nivel}}</p>
+                        </div><br>
+                    </div><!-- se termina el  Row-->
+                </div><!-- termina Antecedentes_Familiares-->
+
+                <div class="tab-pane fade in active" id="Mujeres">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p>Está Ud embarazada?&nbsp;{{form.esta_embarazada}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p>Está Ud amamantando?&nbsp;{{form.esta_amamantando}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            {% for e in form.menarca|slice:"0:1" %}
+                                {{e}}<br>
+                            {% endfor %}
+                        </div><br>
+                    </div><!-- se termina el  Row-->
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p># de Embarazos/Partos:&nbsp;{{form.num_embarazos}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 ">
+                            <p>Tipo de Anticonceptivos:&nbsp;{{form.tipos_de_anticonceptivos}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-3 " id="menarca_div">
+                            <p>Fecha de Ultima Regla:&nbsp;{{form.fecha_de_ultima_regla}}</p>
+                        </div><br>
+                    </div><!-- se termina el  Row-->
+                </div> <!-- Termina Tab mujeres -->
+
+
+                <div class="tab-pane fade in active" id="Inmunizaciones">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 ">
+                            <p>Gripe Fecha&nbsp;{{form.fecha_gripe}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-4 ">
+                            <p>Tétanos Fecha&nbsp;{{form.fecha_tetanos}}</p>
+                        </div><br>
+
+                        <div class="col-xs-12 col-sm-4 ">
+                            {% for e in form.otra_inmunizacion|slice:"0:1" %}
+                                {{e}}<br>
+                            {% endfor %}
+
+                        </div>
+                    </div><!-- se termina el  Row-->
+
+                    <div class="row" id="inmunizacionesotras"> 
+                        <table class="table" border="0">
+                        {{ inmunizacionesotras.management_form }}
+
+                        {% for form in inmunizacionesotras.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Inmunización</th>
+                                    <th>Fecha</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_inmunizacionesotras"> 
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div><!-- se termina el  Row-->
+               
+                </div> <!-- Termina Tab Inmunizaciones -->
+
+
+                <div class="tab-pane fade" id="Padecimiento_Actual">
+                    <div class="row">
+                        <label>Padecimiento Actual: </label>
+                    </div><!-- se termina el  Row-->
+
+                    <div class="row">
+                        <div class="col-xs-12 ">
+                            {{form.padecimiento_actual}}
+                        </div>
+                    </div><!-- se termina el  Row-->
+                    <br><br>
+                    <div class="row inner">
+                        <div class="col-md-1 col-sm-3 col-xs-6 inner">IDX:</div>
+                        <div class="col-xs-12 col-sm-6 ui-widget">
+                            <p>
+                            {{ form.idx.errors }}
+                            {{ form.idx }}
+                            {{ form.idx.help_text }}
+                            </p>
+                        </div>
+                    </div>
+                </div> <!-- Termina Tab  -->
+
+        <div class="tab-pane fade" id="Laboratorio_Gabinete">
+                    <div class="row">
+                        <label>Seleccionar archivo: </label>
+                    </div><!-- se termina el  Row-->
+
+                    <div class="row">
+                        <div class="col-xs-12 ">
+                            {{form.archivos}}
+                        </div>
+                    </div><!-- se termina el  Row-->
+                    <br><br>
+
+                    <input class="btn btnPrevious btn-primary" type="submit" value="Guardar"/> <a href="/">Regresar</a>
+                </div> <!-- Termina Tab  -->
+                
+
+
+            </div>
+            </div>
+        </form>
+    </div>
+
+
+
+
+
+
+<!-- Referencias JS/JQUERY -->
+<script src="/static/bootstrap/js/jquery.min.js"></script>
+<script src="/static/bootstrap/js/jquery.formset.js"></script>
+<script src="/static/js_autocomplete/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+var $j = $.noConflict();
+</script>
+<script src="/static/bootstrap/js/calcularRFC.js"></script>
+<script src="/static/bootstrap/js/cambiarInputFecha.js"></script>
+<script src="/static/bootstrap/js/Condiciones_otras_cancer.js"></script>
+<script src="/static/bootstrap/js/in_active.js"></script>
+<script src="/static/bootstrap/js/formsets_tables.js"></script>
+<script src="/static/bootstrap/js/RFC_disabled.js"></script>
+
+<script src="/static/js_autocomplete/jquery-ui.js"></script>
+<script src="/static/js_autocomplete/superfish.js"></script>
+<script src="/static/js_autocomplete/jquery.easing.1.3.js"></script>
+<script src="/static/js_autocomplete/tms-0.4.1.js"></script>
+<script src="/static/js_autocomplete/slider.js"></script>
+<script type="text/javascript">
+    $j(function(){
+      function equalHeight(group) {
+        var tallest = 0;
+        group.each(function() {
+          var thisHeight = $j(this).height();
+          if(thisHeight > tallest) {
+            tallest = thisHeight;
+          }
+        });
+        group.height(tallest);
+      } 
+      equalHeight($j(".box-1 .inner"));
+
+      
+      $j("#id_idx").autocomplete({
+        minLength:1,
+        source: "/idx_auto_complete/"
+      });
+
+    });
+  </script>
+
+
+<script type="text/javascript">
+  $('.btnPrevious').click(function(){
+  $('.nav-pills a:first').tab('show')
+});
+</script>
+
+
+{% else %}
+<br><br><br>
+<center style="font-size:18px;">No tiene acceso a esta sección con el usuario <b style="font-size:22px;">{{user}}</b>.<p><a href="/">Regresar</p></center>
+{% endif %} 
+<!-- ENDIF PERMISSIONS -->
+ {%endblock%}
+

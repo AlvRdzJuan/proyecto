@@ -1,0 +1,80 @@
+{%extends 'base.html'%}   
+{% load static staticfiles auth_extras %} 
+  {%block style%} 
+  <link href="/static/bootstrap/css/registrar_expediente.css" rel="stylesheet" type="text/css" media="all">
+  {%endblock%}
+{%block content%}
+<title>Hoja de Evolución</title>
+<body>
+<br><br><br><br>
+<!-- IF PERMISSIONS -->
+{% if request.user|has_group:"medico" or request.user|has_group:"terapeuta" or request.user|has_group:"administracion" %}
+<div class="container bg_registrar" >
+<form action="" method="POST" onsubmit="FuncionActivar()">{% csrf_token %}
+<label style="font-size:18px;font-weight: bold;">Nombre del Paciente:</label>  <label id="fullname" name="fullname"></label><br><br>
+{{form.nombre}} {{form.ap_paterno}} {{form.ap_materno}} <!-- DESACTIVAR NOMBRES-->
+<div class="row" id="hojaevolucion">
+                        <table class="table" border="0">
+                        {{ hojaevolucion.management_form }}
+
+                        {% for form in hojaevolucion.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Evolución</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row_hojaevolucion">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+
+
+                                        <!-- A los campos individuales accedo con field.form.relationship 
+                                        ó form.name-->
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div> <!-- se termina el primer Row-->
+                    <br><br><input class="btn btnPrevious btn-primary" type="submit" value="Guardar"/> <a href="/">Regresar</a>
+                    </form>
+</div>
+</body>
+
+
+
+
+
+<!-- Referencias JS/JQUERY -->
+<script src="/static/bootstrap/js/jquery.min.js"></script>
+<script src="/static/bootstrap/js/jquery.formset.js"></script>
+<script src="/static/bootstrap/js/HojaTratamiento.js"></script>
+<script src="/static/bootstrap/js/Hoja_Evolucion_Hide_Inputs.js"></script>
+<!-- Listar por orden-->
+<script type="text/javascript">
+$('.formset_row_hojaevolucion').formset({
+    addText: 'Agregar Otro Registro',
+    deleteText: 'Eliminar',
+    prefix: 'hojaevolucion_set'
+});
+</script>
+
+{% else %}
+<br><br><br>
+<center style="font-size:18px;">No tiene acceso a esta sección con el usuario <b style="font-size:22px;">{{user}}</b>.<p><a href="/">Regresar</p></center>
+{% endif %} 
+<!-- ENDIF PERMISSIONS -->
+<br><br><br>
+ {%endblock%}

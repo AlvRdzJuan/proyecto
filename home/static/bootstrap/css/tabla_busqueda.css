@@ -1,0 +1,119 @@
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+thead {
+    background-color: gray;
+    color: white;
+}
+input[type="text"],
+textarea,select,
+input[type="date"],
+input[type="number"],
+input[type="email"] { 
+  display: block;
+  margin: 0;
+  width: 40%;
+  font: 600 15px "Open Sans",Arial,sans-serif;
+  appearance: none;
+  box-shadow: none;
+  border: 1px solid #bbbbbb;
+  padding: 9px 15px; 
+  background: white;
+  border-radius: 4px;
+  color: #626262;
+}
+input:focus { 
+    outline:none;
+    border-color:#5ca6e1;
+    box-shadow:0 0 10px #5ca6e1;
+}
+@media only screen and (max-width: 800px) {
+
+	input[type="text"]{
+		width: 80%;
+	}
+    thead {
+    background-color: white;
+    }
+    /* Force table to not be like tables anymore */
+	#no-more-tables table, 
+	#no-more-tables thead, 
+	#no-more-tables tbody, 
+	#no-more-tables th, 
+	#no-more-tables td, 
+	#no-more-tables tr { 
+		display: block; 
+		padding-top: 18px;
+	}
+ 
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#no-more-tables thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+ 
+	#no-more-tables tr { border: 1px solid #ccc; }
+ 
+	#no-more-tables td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+		white-space: normal;
+		text-align:left;
+	}
+ 
+	#no-more-tables td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		/*white-space: nowrap;*/
+		text-align:left;
+		font-weight: bold;
+	}
+ 
+	/*
+	Label the data
+	*/
+	#no-more-tables td:before { content: attr(data-title); }
+}
+
+.centrarcontenido{    
+	color: black;
+    font-family:  'Open Sans', Arial, Helvetice Neue, sans-serif;
+    font-size: 12px;
+	
+	font-weight: 300; 
+	font-style: normal; 
+	-webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
+	-webkit-text-size-adjust: 100%;
+	margin: 50px; /* Provides padding for the content */
+}
+
+.centrarcontenido table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.centrarcontenido th, td {
+    padding: 11px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+

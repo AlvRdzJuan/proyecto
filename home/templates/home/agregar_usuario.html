@@ -1,0 +1,97 @@
+{%extends 'base.html'%}
+{% load static staticfiles auth_extras %} 
+  {%block style%}
+   <link href="/static/bootstrap/css/registrar_expediente.css" rel="stylesheet" type="text/css" media="all">
+   <style type="text/css">
+       button {
+        margin-left: 40%;
+        margin-right: 50%;
+       }
+        h1 {
+        margin-left: 40%;
+        
+       }
+       ul #mensaje{
+        list-style: none;
+       }
+       #mensaje h5{
+    list-style: none;
+    color:#333333;
+}
+   </style>
+  {%endblock%}
+ 
+{%block content%}
+{% if user.is_superuser %}
+<br><br><br>
+<form method="POST">{%csrf_token%}
+<div class="container bg_registrar mx-auto " style="width: 70%;">
+    <body >
+        <!--{% if messages %}
+                  <ul class="messages">
+                    {% for message in messages %}
+                      <li id="mensaje" {% if message.tags %} class="{{ message.tags }}"{% endif %}><div style="position: static;" class="m"><center><h5><b>Se ha agregado el usuario con éxito!</b></h5></center></div></li>
+                    {% endfor %}
+                  </ul>
+            {% endif %}<br>-->
+        <h1> Agregar Usuario </h1>
+        <div class="row"> 
+            <div class="text-right col-sm-4 col-xs-12">Usuario</div>
+            <div class="col-sm-6 col-xs-12">
+                
+                    {{ form.username.errors }}
+                    {{ form.username }}
+                    <p>Solo letras, digitos y @/./+/-/_. </p>
+                
+            </div>                  
+        </div>
+        <div class="row"> 
+            <div class="text-right col-sm-4 col-xs-12">Contraseña  </div>
+            <div class="col-sm-6 col-xs-12">
+                {{ form.password1.errors }}
+                {{ form.password1 }}
+                
+                
+            </div>              
+        </div>
+        <br>
+        <div class="row"> 
+            <div class="text-right col-sm-4 col-xs-12">Confirmar Contraseña </div>
+            <div class="col-sm-6 col-xs-12">
+                
+                    {{ form.password2.errors }}
+                    {{ form.password2 }}
+            </div>                  
+        </div>
+        <br>
+        <div class="row"> 
+            <div class="text-right col-sm-4 col-xs-12">Tipo de usuario</div>
+            <div class="col-sm-6 col-xs-12">
+                
+                    {{ form.tipo_de_usuario.errors }}
+                    {{ form.tipo_de_usuario }}
+                    {{ form.tipo_de_usuario.help_text }}
+                
+            </div>                  
+        </div>
+        <br>
+    <button type="submit" class="btn btn-primary btn-md">Crear Usuario</button>
+    <br><br>
+    <button type="reset" class="btn btn-md ">Cancel</button>
+    </body>
+
+    
+</div>
+    
+</form>
+<!--<script>
+        setTimeout(function() {
+            $('.m').fadeOut('slow');
+        }, 3000); // 1000 =  1 sec
+</script>-->
+
+{% else %}
+<br><br><br>
+<center style="font-size:18px;">No tiene acceso a esta sección con el usuario <b style="font-size:22px;">{{user}}</b>.<p><a href="/">Regresar</p></center>
+{% endif %}
+ {%endblock%}

@@ -1,0 +1,141 @@
+#fullname{
+        color: #303030;
+        font-size: 18px;
+        border-bottom-style: solid;
+        border-width: 0 0 1px 0;
+    }
+#labelidx{
+        color: #303030;
+        font-size: 18px;
+        border-bottom-style: solid;
+        border-width: 0 0 1px 0;
+}
+#id_padecimiento_actual{
+    width:120%;
+}
+
+#id_idx{
+    width: 85%;
+}   
+    #id_sexo,#id_estado_civil,#id_practica_deporte,#id_lado_dominante,#id_nivel,
+    #id_esta_embarazada,#id_esta_amamantando li {
+        list-style: none;
+    }
+
+
+    input#id_motivo_de_consulta,input#id_medico_que_refiere,input#id_otras_drogadiccion,
+    input#id_padre_tipo_cancer,input#id_otro_antecedentes_familiares_padre,
+    input#id_causa_muerte_padre,input#id_madre_tipo_cancer,input#id_otro_antecedentes_familiares_madre,
+    input#id_causa_muerte_madre,input#id_otro_antecedentes_familiares_hermanos,
+    input#id_hermanos_tipo_cancer,input#id_causa_muerte_hermanos,input#id_num_embarazos,
+    input#id_tipos_de_anticonceptivos,input#id_fecha_de_ultima_regla
+    {
+        width: 80%;
+    }
+    input#id_dias_tabaquismo,input#id_year_tabaquismo,input#id_year_alcoholismo,
+    input#id_year_drogadiccion,input#id_year_ejercicio,input#id_year_cafeina,
+    input#id_edad_padre,input#id_edad_madre,input#id_edad_hermanos,input#id_num_hermanos_vivos,
+    input#id_num_hermanos_finados
+    {
+        width: 35%;
+    }
+
+    a#sociales 
+    {
+    border-bottom: 1px solid black;
+    padding-bottom: 5px;
+    color:black;
+    }
+
+    .bg_registrar{
+        background: #d5e1e2;
+        padding: 40px;
+        border-radius: 15px;
+    }/*finaliza css container*/
+
+
+/* UL CSS TEST*/
+    #pills-tab li
+{
+display: block;
+list-style-type: none;
+padding-right: 22px;
+padding-left: 22px;
+}
+
+/*Hacer tabs 1 linea y con scrollbar*/
+@media screen and (max-width: 650px) {
+.nav {
+    display: -ms-flexbox;
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: scroll; 
+    -ms-flex-wrap: wrap;
+    flex-wrap: nowrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+}
+
+
+/*Hacer responsive las tablas del registrar*/
+
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    /* Force table to not be like tables anymore */
+    table, thead, tbody, th, td, tr { 
+        display: block; 
+    }
+    
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    tr { border: 1px solid #ccc; }
+    
+    td { 
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee; 
+        position: relative;
+        padding-left: 50%; 
+    }
+    
+    td:before { 
+        /* Now like a table header 
+        position: absolute;*/
+        /* Top/left values mimic padding */
+        top: 0px;
+        padding-bottom: 5px;
+        left: 6px;
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+    }
+    
+
+}
+
+
+  input{
+   outline: 0;
+  border-width: 0 0 1px 0;
+  border-color: gray;
+   background-color : white;
+   border-radius: 3px
+}
+textarea{
+    outline: 0;
+  border-width: 0 0 1px 0;
+  border-color: gray;
+   background-color : white;
+   border-radius: 2px; 
+   width: 100%;
+    height: 100px;
+}

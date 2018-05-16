@@ -1,0 +1,20 @@
+{%extends 'base.html'%} 
+{%block navbar%}{%endblock%}
+{%block content%}
+  <div class="login">
+  <center><img src="/static/images/login_logo.png" width="100%"/></center><p></p>
+    <form method="POST">{% csrf_token %}
+      <input type="text" id="u" name="u" placeholder="Usuario" required="required" />
+        <input type="password" id="p" name="p" placeholder="Contraseña" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Iniciar Sesión</button>
+        <br><div class="m">{{ mensaje }}</div>
+    </form>
+</div>
+  
+    <script src="js/index.js"></script>
+    <script>
+        setTimeout(function() {
+            $('.m').fadeOut('slow');
+        }, 3000); // 1000 =  1 sec
+</script>
+{%endblock%}

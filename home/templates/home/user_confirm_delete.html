@@ -1,0 +1,19 @@
+{%extends 'base.html'%}
+{% load static staticfiles auth_extras %}
+{%block style%}
+<style type="text/css">
+	.esconder{
+  display: none;
+}
+</style>
+{%endblock%}
+{%block content%}
+<br><br><br>
+<div class="container">
+<form method="post">{% csrf_token %}
+    <!--<label style="font-size:20px;font-weight: bold;">¿Está seguro que desea eliminar al usuario "{{ object }}"?</label><br>-->
+    <label style="font-size:20px;font-weight: bold;">¿Está seguro que desea eliminar "{{object}}"?</label><br>
+    <input type="submit" value="Eliminar" /><br><br><a href="javascript:history.back()">Regresar</a>
+</form>
+</div>
+{%endblock%}

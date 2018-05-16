@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
+<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+	<title>Modificar Expediente Medico</title>
+</head>
+<body>
+
+<form method="POST">{% csrf_token %}
+<div>
+	
+</div>
+RFC {{form.rfc}}
+<br><br><br>
+Fecha {{form.fecha}}
+<br><br><br>
+{{ form.nombre.label }}
+{{ form.nombre.errors }}
+{{form.nombre}}
+{{ form.nombre.help_text }}
+<br><br><br>
+{{ form.ap_paterno.label }}
+{{ form.ap_paterno.errors }}
+{{form.ap_paterno}}
+{{ form.ap_paterno.help_text }}
+<br><br><br>
+{{ form.ap_materno.label }}
+{{ form.ap_materno.errors }}
+{{form.ap_materno}}
+{{ form.ap_materno.help_text }}
+<br><br><br>
+{{ form.edad.label }}
+{{ form.edad.errors }}
+{{ form.edad }}
+{{ form.edad.help_text }}
+<br><br><br>
+{{ form.fecha_de_nacimiento.label }}
+{{ form.fecha_de_nacimiento.errors }}
+{{ form.fecha_de_nacimiento }}
+{{ form.fecha_de_nacimiento.help_text }}
+<br><br><br>
+{{ form.sexo.label }}
+{{form.sexo}}
+{{ form.sexo.errors }}
+{{ form.sexo.help_text }}
+<br><br><br>
+{{ form.estado_civil.label }}
+{{ form.estado_civil.errors }}
+{{form.estado_civil}}
+{{ form.estado_civil.help_text }}
+<br><br><br>
+{{ form.num_hijos.label }}
+{{ form.num_hijos.errors }}
+{{ form.num_hijos }}
+{{ form.num_hijos.help_text }}
+<br><br><br>
+{{ form.medico_que_refiere.label }}
+{{ form.medico_que_refiere.errors }}
+{{ form.medico_que_refiere }}
+{{ form.medico_que_refiere.help_text }}
+<br><br><br>
+{{ form.motivo_de_consulta.label }}
+{{ form.motivo_de_consulta.errors }}
+{{ form.motivo_de_consulta }}
+{{ form.motivo_de_consulta.help_text }}
+<br><br><br>
+<label style="font-size:18px;"><b>Antecedentes Personales</b></label>
+<p style="font-size:12px;">(Favor de marcar las enfermedades que padezca.)</p>
+{% for e in form.antecedentes_personales %}
+	{{e}}
+	<br>
+{% endfor %}
+<br><br><br>
+{{ form.tipo_tratamiento.label }}
+{{ form.tipo_tratamiento.errors }}
+{{ form.tipo_tratamiento }}
+{{ form.tipo_tratamiento.help_text }}
+<br><br><br>
+{{ form.otro_especificar.label }}
+{{ form.otro_especificar.errors }}
+{{ form.otro_especificar }}
+{{ form.otro_especificar.help_text }}
+<br><br><br>
+
+
+<input type="submit" value="submit"></input>
+
+
+
+
+
+
+</form>
+</body>
+<script type="text/javascript">
+document.getElementById("id_fecha_de_nacimiento").oninput = function() {check_user()};
+document.getElementById("id_nombre").oninput = function() {check_user()};
+document.getElementById("id_ap_paterno").oninput = function() {check_user()};
+document.getElementById("id_ap_materno").oninput = function() {check_user()};
+
+vocales="aeiouAEIOU";  
+function sacarvocal(paterno){
+	for(a=0;a<paterno.length+1;a++)
+	{ 
+		letra=paterno.trim().charAt(a); 
+		if(vocales.indexOf(letra)!=-1)
+		{ 
+			return letra; 
+			break; 
+		} 
+	} 
+} 
+
+function check_user(){
+	nombre=document.getElementById("id_nombre").value;
+	letra_nombre=nombre.trim().charAt(0);
+	apellido_materno=document.getElementById("id_ap_materno").value;
+	letra_apellido_materno=apellido_materno.trim().charAt(0);
+	fecha=document.getElementById("id_fecha_de_nacimiento").value;
+	yy_fecha=fecha.trim().substring(2,4);
+	mm_fecha=fecha.trim().substring(5,7);
+	dd_fecha=fecha.trim().substring(8,10);
+
+
+	if((document.getElementById("id_ap_paterno").value != "") || (document.getElementById("id_fecha_de_nacimiento").value != "")) 
+	{
+		apellido_paterno=document.getElementById("id_ap_paterno").value;
+		letra_apellido_paterno=apellido_paterno.trim().charAt(0);
+		apellido_paterno=apellido_paterno.trim().substr(1);
+		var funcion=sacarvocal(apellido_paterno);
+		result=letra_apellido_paterno+funcion+letra_apellido_materno+letra_nombre+yy_fecha+mm_fecha+dd_fecha;
+		document.getElementById("id_rfc").value = result.toUpperCase();
+	}
+	else
+	{
+		result=letra_apellido_materno+letra_nombre;
+		document.getElementById("id_rfc").value = result.toUpperCase();
+	}
+}
+
+$('input[name="sexo"]').on('change', function() {
+   $('input[name="sexo"]').not(this).prop('checked', false);
+});
+
+$('input[name="estado_civil"]').on('change', function() {
+   $('input[name="estado_civil"]').not(this).prop('checked', false);
+});
+</script>
+</html> 
